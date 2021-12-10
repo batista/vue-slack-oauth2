@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
+	"golang.org/x/oauth2/slack"
 )
 
 func main() {
@@ -14,8 +14,8 @@ func main() {
 	conf := &oauth2.Config{
 		ClientID:     "YOUR_CLIENT_ID",
 		ClientSecret: "YOUR_CLIENT_SECRET",
-		RedirectURL:  "postmessage",
-		Endpoint:     google.Endpoint,
+		RedirectURL:  "YOUR_REDIRECT_URL",
+		Endpoint:     slack.Endpoint,
 	}
 
 	// exchange auth_code to token including refresh_token
