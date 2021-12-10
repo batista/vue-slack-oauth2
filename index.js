@@ -1,8 +1,9 @@
 
-var googleAuth = (function () {
+var slackAuth = (function () {
 
   function installClient() {
-    var apiUrl = 'https://apis.google.com/js/api.js'
+    var apiUrl = 'https://apis.google.com/js/api.js' // TODO: Find replacement
+    
     return new Promise((resolve) => {
       var script = document.createElement('script')
       script.src = apiUrl
@@ -34,14 +35,14 @@ var googleAuth = (function () {
   function Auth() {
     if (!(this instanceof Auth))
       return new Auth()
-    this.GoogleAuth = null /* window.gapi.auth2.getAuthInstance() */
+    this.SlackAuth = null /* window.gapi.auth2.getAuthInstance() */
     this.isAuthorized = false
     this.isInit = false
     this.prompt = null
     this.isLoaded = function () {
       /* eslint-disable */
-      console.warn('isLoaded() will be deprecated. You can use "this.$gAuth.isInit"')
-      return !!this.GoogleAuth
+      console.warn('isLoaded() will be deprecated. You can use "this.$slackAuth.isInit"')
+      return !!this.SlackAuth
     };
 
     this.load = (config, prompt) => {
@@ -50,10 +51,10 @@ var googleAuth = (function () {
           return initClient(config)
         })
         .then((gapi) => {
-          this.GoogleAuth = gapi.auth2.getAuthInstance()
+          this.SlackAuth = gapi.auth2.getAuthInstance()
           this.isInit = true
           this.prompt = prompt
-          this.isAuthorized = this.GoogleAuth.isSignedIn.get()
+          this.isAuthorized = this.SlackAuth.isSignedIn.get()
         }).catch((error) => {
           console.error(error)
         })
@@ -61,16 +62,16 @@ var googleAuth = (function () {
 
     this.signIn = (successCallback, errorCallback) => {
       return new Promise((resolve, reject) => {
-        if (!this.GoogleAuth) {
+        if (!this.SlackAuth) {
           if (typeof errorCallback === 'function') errorCallback(false)
           reject(false)
           return
         }
-        this.GoogleAuth.signIn()
-          .then(googleUser => {
-            if (typeof successCallback === 'function') successCallback(googleUser)
-            this.isAuthorized = this.GoogleAuth.isSignedIn.get()
-            resolve(googleUser)
+        this.SlackAuth.signIn()
+          .then(slackUser => {
+            if (typeof successCallback === 'function') successCallback(slackUser)
+            this.isAuthorized = this.SlackAuth.isSignedIn.get()
+            resolve(slackUser)
           })
           .catch(error => {
             if (typeof errorCallback === 'function') errorCallback(error)
@@ -81,12 +82,12 @@ var googleAuth = (function () {
 
     this.getAuthCode = (successCallback, errorCallback) => {
       return new Promise((resolve, reject) => {
-        if (!this.GoogleAuth) {
+        if (!this.SlackAuth) {
           if (typeof errorCallback === 'function') errorCallback(false)
           reject(false)
           return
         }
-        this.GoogleAuth.grantOfflineAccess({ prompt: this.prompt })
+        this.SlackAuth.grantOfflineAccess({ prompt: this.prompt })
           .then(function (resp) {
             if (typeof successCallback === 'function') successCallback(resp.code)
             resolve(resp.code)
@@ -100,12 +101,12 @@ var googleAuth = (function () {
 
     this.signOut = (successCallback, errorCallback) => {
       return new Promise((resolve, reject) => {
-        if (!this.GoogleAuth) {
+        if (!this.SlackAuth) {
           if (typeof errorCallback === 'function') errorCallback(false)
           reject(false)
           return
         }
-        this.GoogleAuth.signOut()
+        this.SlackAuth.signOut()
           .then(() => {
             if (typeof successCallback === 'function') successCallback()
             this.isAuthorized = false
@@ -125,15 +126,15 @@ var googleAuth = (function () {
 
 
 
-function installGoogleAuthPlugin(Vue, options) {
+function installSlackAuthPlugin(Vue, options) {
   /* eslint-disable */
   //set config
-  let GoogleAuthConfig = null
-  let GoogleAuthDefaultConfig = { scope: 'profile email' }
+  let SlackAuthConfig = null
+  let SlackAuthDefaultConfig = { scope: 'profile email' }
   let prompt = 'select_account'
   if (typeof options === 'object') {
-    GoogleAuthConfig = Object.assign(GoogleAuthDefaultConfig, options)
-    if (options.scope) GoogleAuthConfig.scope = options.scope
+    SlackAuthConfig = Object.assign(SlackAuthDefaultConfig, options)
+    if (options.scope) SlackAuthConfig.scope = options.scope
     if (options.prompt) prompt = options.prompt
     if (!options.clientId) {
       console.warn('clientId is required')
@@ -143,15 +144,15 @@ function installGoogleAuthPlugin(Vue, options) {
   }
 
   //Install Vue plugin
-  Vue.gAuth = googleAuth
+  Vue.slackAuth = slackAuth
   Object.defineProperties(Vue.prototype, {
-    $gAuth: {
+    $slackAuth: {
       get: function () {
-        return Vue.gAuth
+        return Vue.slackAuth
       }
     }
   })
-  Vue.gAuth.load(GoogleAuthConfig, prompt)
+  Vue.slackAuth.load(SlackAuthConfig, prompt)
 }
 
-export default installGoogleAuthPlugin
+export default installSlackAuthPlugin

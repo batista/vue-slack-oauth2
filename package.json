@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Handling Slack Auth2 sign-in and sign-out",
   "main": "index.js",
-  "types": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +23,7 @@
   "author": {
     "name": "Sergio Batista",
     "email": "dev@se.rg.io"
-  }
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/batista/vue-slack-oauth2/issues"

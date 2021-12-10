@@ -11,8 +11,8 @@
 /** 
 * You should first need to place these 2 lines of code in your APP ENTRY file, e.g. src/main.js
 *
-* import GAuth from 'vue-google-oauth2'
-* Vue.use(GAuth, {clientId: '4584XXXXXXXX-2gqknkvdjfkdfkvb8uja2k65sldsms7qo9.apps.googleusercontent.com'})
+* import SlackAuth from '@batista/vue-slack-oauth2'
+* Vue.use(SlackAuth, {clientId: 'Your Cient Secret'})
 * 
 */
 export default {
@@ -27,8 +27,8 @@ export default {
   methods: {
     async handleClickGetAuth() {
       try {
-        const authCode = await this.$gAuth.getAuthCode()
-        const response = await this.$http.post('http://your-backend-server.com/auth/google', { code: authCode, redirect_uri: 'postmessage' })
+        const authCode = await this.$slackAuth.getAuthCode()
+        const response = await this.$http.post('http://your-backend-server.com/auth/slack', { code: authCode, redirect_uri: 'postmessage' })
       } catch (error) {
         // On fail do something
       }
@@ -36,9 +36,9 @@ export default {
 
     async handleClickSignIn(){
       try {
-        const googleUser = await this.$gAuth.signIn()
-        console.log('user', googleUser)
-        this.isSignIn = this.$gAuth.isAuthorized
+        const slackUser = await this.$slackAuth.signIn()
+        console.log('user', slackUser)
+        this.isSignIn = this.$slackAuth.isAuthorized
       } catch (error) {
         // On fail do something
         console.error(error);
@@ -48,8 +48,8 @@ export default {
 
     async handleClickSignOut(){
       try {
-        await this.$gAuth.signOut()
-        this.isSignIn = this.$gAuth.isAuthorized
+        await this.$slackAuth.signOut()
+        this.isSignIn = this.$slackAuth.isAuthorized
       } catch (error) {
         // On fail do something
       }
@@ -58,8 +58,8 @@ export default {
   mounted(){
     let that = this
     let checkGauthLoad = setInterval(function(){
-      that.isInit = that.$gAuth.isInit
-      that.isSignIn = that.$gAuth.isAuthorized
+      that.isInit = that.$slackAuth.isInit
+      that.isSignIn = that.$slackAuth.isAuthorized
       if(that.isInit) clearInterval(checkGauthLoad)
     }, 1000);
   }
