@@ -5,7 +5,7 @@ Handling Slack sign-in and sign-out for Vue.js applications.
 ![GitHub](https://img.shields.io/github/license/batista/vue-slack-oauth2.svg)
 ![vue-slack-oauth2](https://img.shields.io/npm/dt/vue-slack-oauth2.svg)
 
-Very much inspired by 
+Very much inspired by [vue-google-oauth2](https://github.com/guruahn/vue-google-oauth2/)
 
 ## Installation
 ### Installation with npm
